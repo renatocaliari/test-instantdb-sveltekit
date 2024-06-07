@@ -56,7 +56,7 @@
 	{#if emailOK}
 		<label
 			>Token:
-			<input
+			<Input
 				aria-invalid={!tokenOK}
 				type="text"
 				name="token"
