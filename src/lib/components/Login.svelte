@@ -50,7 +50,7 @@
 				aria-describedby="valid-helper"
 			/></label
 		>
-		<Button>Login</Button>
+		<Button type="submit">Login</Button>
 		<small id="valid-helper">{msgEmail}</small>
 	</form>
 	{#if emailOK}
