@@ -69,7 +69,7 @@
 	}
 </script>
 
-<main class="md:w-4/5">
+<main class="w-full md:w-4/5">
 	<header>
 		<h2>Task List</h2>
 		<div class="flex flex-col">
