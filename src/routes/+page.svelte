@@ -80,7 +80,7 @@
 	});
 
 	function sendMousePosition(x, y) {
-		if (!loading) {
+		if (room && !loading) {
 			room.publishTopic('mousePosition', { user: user.value, x, y });
 		}
 	}
@@ -140,7 +140,7 @@
 				<ul class="flex flex-row items-center"><li><strong>InstantDB + SvelteKit</strong></li></ul>
 				<ul class="flex flex-row items-center gap-2">
 					<li class="hidden md:flex">User: {user.value.email}</li>
-					<li>
+					<li class="whitespace-nowrap">
 						{#key status}<Badge variant="secondary">{status}</Badge>{/key}
 					</li>
 					<li><Button size="sm" onclick={() => db.auth.signOut()}>Logout</Button></li>
@@ -149,7 +149,7 @@
 		{/if}
 		{#if !loading}
 			{#if !closeLogin}
-				<Login {closeLogin} />
+				<Login {db} {closeLogin} />
 			{:else if closeLogin}
 				<div class="grid grid-cols-1 md:grid-cols-2 w-full gap-8">
 					<div class="flex md:border-r-slate-300 md:border-r p-2 w-full">
