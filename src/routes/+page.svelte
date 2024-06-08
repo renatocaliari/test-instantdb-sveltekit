@@ -93,7 +93,7 @@
 			document.body.appendChild(cursor);
 			cursors[peerId] = cursor;
 		}
-		cursors[peerId].innerHTML = name || ' ';
+		cursors[peerId].innerHTML = '👉' + name;
 		cursors[peerId].classList.add('cursor');
 		cursors[peerId].style.position = 'fixed';
 		cursors[peerId].style.left = `${x}px`;
