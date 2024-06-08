@@ -69,7 +69,7 @@
 	}
 </script>
 
-<main class="w-full md:w-4/5">
+<main class="w-full">
 	<header>
 		<h2>Task List</h2>
 		<div class="flex flex-col">
@@ -84,7 +84,7 @@
 	</header>
 	<section class="mt-4">
 		<h3>Tasks:</h3>
-		<ul class="flex flex-col mb-2">
+		<ul class="flex flex-col mb-2 w-full">
 			{#each todos as todo (todo.id)}
 				<li class="flex flex-row border-b border-b-slate-200 items-center gap-2">
 					<Checkbox
