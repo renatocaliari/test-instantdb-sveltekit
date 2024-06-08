@@ -41,7 +41,7 @@
 <aside class="sidebar">
 	<Peers {user} {peers} />
 	<section class="mt-4">
-		<h5>Temporary Chat</h5>
+		<h5>Chat</h5>
 		<div class="flex flex-row gap-1 items-center">
 			<small
 				>Reactions:
