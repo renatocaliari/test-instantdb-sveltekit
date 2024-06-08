@@ -105,7 +105,7 @@
 	<section>
 		<form onsubmit={submitForm} class="flex flex-row gap-2">
 			<Input type="text" placeholder="What needs to be done?" autofocus bind:value={newTodo} />
-			<Button>Add</Button>
+			<Button type="submit">Add</Button>
 		</form>
 	</section>
 </main>

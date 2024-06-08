@@ -125,7 +125,7 @@
 			<nav class="flex flex-row justify-between mb-2">
 				<ul><li><strong>Svelte + InstantDB</strong></li></ul>
 				<ul class="flex flex-row items-center gap-2">
-					<li>User: {user.value.email}</li>
+					<li class="hidden md:flex">User: {user.value.email}</li>
 					<li><Button onclick={() => db.auth.signOut()}>Logout</Button></li>
 				</ul>
 			</nav>
