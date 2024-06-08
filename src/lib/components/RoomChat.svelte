@@ -38,7 +38,7 @@
 	}
 </script>
 
-<aside class="sidebar">
+<div class="w-full">
 	<Peers {user} {peers} />
 	<section class="mt-4">
 		<h5>Chat</h5>
@@ -70,4 +70,4 @@
 			{/each}
 		</ul>
 	</section>
-</aside>
+</div>
