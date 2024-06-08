@@ -130,7 +130,6 @@
 </script>
 
 <svelte:body on:mousemove={handleMouseMove} />
-
 <main>
 	{#if !loading}
 		{#if !user || !user.value}

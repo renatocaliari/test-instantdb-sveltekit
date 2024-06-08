@@ -74,6 +74,7 @@
 				<Button type="submit" class="w-full"
 					>{#if !emailOK}Continue{:else}Confirm{/if}</Button
 				>
+				{msgEmail}
 			</Card.Footer>
 		</Card.Root>
 	</form>
