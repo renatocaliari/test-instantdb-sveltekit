@@ -134,7 +134,7 @@
 			<Login {closeLogin} />
 		{:else if closeLogin}
 			<div class="flex flex-col md:flex-row w-full gap-8">
-				<div class="flex border-r-slate-300 border-r p-2 md:w-1/3">
+				<div class="flex border-r-slate-300 border-r p-2 w-full md:w-1/3">
 					<RoomChat {db} {room} {peers} />
 				</div>
 				<div class="col-span-2 flex justify-start p-2 flex-grow w-full">
