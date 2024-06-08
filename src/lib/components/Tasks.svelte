@@ -23,7 +23,7 @@
 	});
 
 	function addTodo(text: string) {
-		console.log('add todo:', text);
+		// console.log('add todo:', text);
 		db.transact(
 			tx.todos[id()].update({
 				text,

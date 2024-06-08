@@ -37,7 +37,7 @@
 	let y = $state(0);
 
 	let cursors = $state({});
-	let presence = $state();
+	let unsubPresence = $state();
 
 	onMount(async () => {
 		// const ipinfo = new IPinfoWrapper('9b717c09549446');
@@ -55,10 +55,10 @@
 				user.value.name = user.value.email.substring(0, 5) + randomId;
 
 				room = db.joinRoom('general', 'main');
-				presence = room.subscribePresence({}, (data) => {
+				unsubPresence = room.subscribePresence({}, (data) => {
 					peers = room.getPresence()?.peers; //data.peers;
 					// console.log('peers:', peers);
-					removeCursorsFromPeersLeftRoom(room.getPresence()?.peers, cursors);
+					removeCursorsFromPeersLeftRoom(peers, cursors);
 				});
 				const mousePosition = room.subscribeTopic('mousePosition', (data) => {
 					setCursorPosition(data.user.id, data.user.name, data.x, data.y);
@@ -67,24 +67,28 @@
 				// } else {
 				//     goto('/login');
 			}
+			loading = false;
 		});
 
 		// let moreInfo = await ipinfo.lookupIp(); //.then((response) => {
 		// user.value.name.concat(moreInfo?.countryFlag);
 		// console.log(moreInfo.countryFlag);
-		loading = false;
+		return () => {
+			unsubPresence();
+			room.leaveRoom();
+		};
 	});
 
 	function sendMousePosition(x, y) {
-		room.publishTopic('mousePosition', { user: user.value, x, y });
+		if (!loading) {
+			room.publishTopic('mousePosition', { user: user.value, x, y });
+		}
 	}
 
 	function handleMouseMove(event) {
-		if (!loading) {
-			x = event.clientX;
-			y = event.clientY;
-			sendMousePosition(x, y);
-		}
+		x = event.clientX;
+		y = event.clientY;
+		sendMousePosition(x, y);
 	}
 
 	function setCursorPosition(peerId, name, x, y) {
@@ -103,6 +107,7 @@
 
 	function removeCursorsFromPeersLeftRoom(peers, cursors) {
 		Object.keys(cursors).forEach((peerId) => {
+			console.log('peerId:', peerId);
 			let foundPeer = Object.keys(peers).find((key) => {
 				return peers[key].id === peerId;
 			});
@@ -142,17 +147,19 @@
 				</ul>
 			</nav>
 		{/if}
-		{#if !closeLogin}
-			<Login {closeLogin} />
-		{:else if closeLogin}
-			<div class="grid grid-cols-1 md:grid-cols-2 w-full gap-8">
-				<div class="flex md:border-r-slate-300 md:border-r p-2 w-full">
-					<RoomChat {db} {room} {peers} />
+		{#if !loading}
+			{#if !closeLogin}
+				<Login {closeLogin} />
+			{:else if closeLogin}
+				<div class="grid grid-cols-1 md:grid-cols-2 w-full gap-8">
+					<div class="flex md:border-r-slate-300 md:border-r p-2 w-full">
+						<RoomChat {db} {room} {peers} />
+					</div>
+					<div class="flex justify-start p-2 w-full">
+						<Tasks {db} />
+					</div>
 				</div>
-				<div class="flex justify-start p-2 w-full">
-					<Tasks {db} />
-				</div>
-			</div>
+			{/if}
 		{/if}
 
 		<!-- <slot/> -->
