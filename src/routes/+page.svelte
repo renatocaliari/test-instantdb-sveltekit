@@ -9,6 +9,7 @@
 	// import IPinfoWrapper, { IPinfo } from "node-ipinfo";
 
 	import { Button } from '$lib/components/shadcn/ui/button';
+	import Badge from '$lib/components/shadcn/ui/badge/badge.svelte';
 
 	const APP_ID = '7c87360a-b00c-4d34-85c9-8fdb89ebe9d0';
 
@@ -113,6 +114,14 @@
 			}
 		});
 	}
+
+	let status = $state('🟢 online');
+	window.addEventListener('online', () => {
+		status = '🟢 online';
+	});
+	window.addEventListener('offline', () => {
+		status = '🔴 offline';
+	});
 </script>
 
 <svelte:body on:mousemove={handleMouseMove} />
@@ -122,11 +131,14 @@
 		{#if !user || !user.value}
 			<!-- Usuário não logado. -->
 		{:else}
-			<nav class="flex flex-row justify-between mb-2">
-				<ul><li><strong>InstantDB + SvelteKit</strong></li></ul>
+			<nav class="flex flex-row items-center justify-between mb-2">
+				<ul class="flex flex-row items-center"><li><strong>InstantDB + SvelteKit</strong></li></ul>
 				<ul class="flex flex-row items-center gap-2">
 					<li class="hidden md:flex">User: {user.value.email}</li>
-					<li><Button onclick={() => db.auth.signOut()}>Logout</Button></li>
+					<li>
+						{#key status}<Badge variant="secondary">{status}</Badge>{/key}
+					</li>
+					<li><Button size="sm" onclick={() => db.auth.signOut()}>Logout</Button></li>
 				</ul>
 			</nav>
 		{/if}
