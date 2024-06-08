@@ -19,7 +19,7 @@
 		try {
 			const magiccode = await db.auth.sendMagicCode({ email: email });
 			console.log('magiccode:', magiccode);
-			msgEmail = 'Check your email and copy/paste the magic code below to proceed';
+			msgEmail = 'Check your email and copy/paste the magic code to proceed';
 			emailOK = true;
 		} catch (error) {
 			msgEmail = 'Invalid email or error sending the magic code';
@@ -70,7 +70,7 @@
 					</div>
 				{/if}
 			</Card.Content>
-			<Card.Footer>
+			<Card.Footer class="flex flex-col">
 				<Button type="submit" class="w-full"
 					>{#if !emailOK}Continue{:else}Confirm{/if}</Button
 				>
