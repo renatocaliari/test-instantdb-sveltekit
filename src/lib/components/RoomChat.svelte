@@ -8,7 +8,7 @@
 	let emojis = $state([]);
 	let messages = $state([]);
 	let msg = $state('');
-	let { db, room, peers } = $props();
+	let { room, peers } = $props();
 
 	function submitForm(event: Event) {
 		event.preventDefault();

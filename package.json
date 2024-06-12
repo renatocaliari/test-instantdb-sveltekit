@@ -33,8 +33,9 @@
 		"postcss-load-config": "^5.1.0",
 		"prettier": "^3.2.5",
 		"prettier-plugin-svelte": "^3.2.3",
-		"svelte": "^5.0.0-next.151",
+		"svelte": "^5.0.0-next.154",
 		"svelte-check": "^3.8.0",
+		"svelte-pincode": "^2.2.1",
 		"svelte-ux": "latest",
 		"tailwindcss": "^3.4.3",
 		"tslib": "^2.6.2",
@@ -48,6 +49,8 @@
 		"clsx": "^2.1.1",
 		"dotenv": "^16.4.5",
 		"lucide-svelte": "^0.390.0",
+		"mode-watcher": "^0.3.0",
+		"svelte-sonner": "^0.3.24",
 		"tailwind-merge": "^2.3.0",
 		"tailwind-variants": "^0.2.1"
 	}

@@ -1,34 +1,18 @@
 <script lang="ts">
 	import { user } from '$lib/store.svelte.js';
-	import { init } from '@instantdb/core';
 	import { onMount } from 'svelte';
 	import Login from '$lib/components/Login.svelte';
 	import Tasks from '$lib/components/Tasks.svelte';
 	import RoomChat from '$lib/components/RoomChat.svelte';
+	import { db } from '$lib/db.svelte';
+
 	// import { uuidv7 } from "uuidv7";
-	// import IPinfoWrapper, { IPinfo } from "node-ipinfo";
 
 	import { Button } from '$lib/components/shadcn/ui/button';
 	import Badge from '$lib/components/shadcn/ui/badge/badge.svelte';
 
-	const APP_ID = '7c87360a-b00c-4d34-85c9-8fdb89ebe9d0';
-
-	interface Todo {
-		id: string;
-		text: string;
-		done: boolean;
-		createdAt: number;
-	}
-
-	type Schema = {
-		todos: Todo;
-		user: { id: string; name: string };
-	};
-
-	let db = $state();
-
 	let loading = $state(true);
-	let closeLogin = $state(false);
+	let loginSuccess = $state(false);
 
 	let room = $state();
 	let peers = $state();
@@ -39,40 +23,44 @@
 	let cursors = $state({});
 	let unsubPresence = $state();
 
-	onMount(async () => {
+	onMount(() => {
 		// const ipinfo = new IPinfoWrapper('9b717c09549446');
 
-		db = init<Schema, RoomSchema>({ appId: APP_ID });
 		db.subscribeAuth((auth) => {
-			closeLogin = !!auth.user;
+			loginSuccess = !!auth.user;
 			user.value = undefined;
-			if (auth.error) {
-				console.log('auth error:', auth.error.message);
-			} else if (auth.user) {
-				user.value = auth.user as User;
-				const randomId = Math.random().toString(36).slice(2, 6);
-
-				user.value.name = user.value.email.substring(0, 5) + randomId;
-
+			if (auth.user) {
+				if (auth.user) {
+					user.value = auth.user;
+					const randomId = Math.random().toString(36).slice(2, 6);
+					user.value.name = user.value.email.substring(0, 5) + randomId;
+				}
 				room = db.joinRoom('general', 'main');
 				unsubPresence = room.subscribePresence({}, (data) => {
-					peers = room.getPresence()?.peers; //data.peers;
-					// console.log('peers:', peers);
+					peers = room.getPresence()?.peers;
+					console.log('peers:', peers);
 					removeCursorsFromPeersLeftRoom(peers, cursors);
 				});
 				const mousePosition = room.subscribeTopic('mousePosition', (data) => {
 					setCursorPosition(data.user.id, data.user.name, data.x, data.y);
 				});
-				room.publishPresence(user.value);
-				// } else {
-				//     goto('/login');
+
+				if (!peers || Object.keys(peers).length === 0) {
+					room.publishPresence(user.value);
+				} else {
+					Object.keys(peers).forEach((peerId) => {
+						console.log('peerId:', peerId);
+						let foundPeer = Object.keys(peers).find((key) => {
+							return peers[key].id === peerId;
+						});
+						if (!foundPeer && peers[peerId].email) {
+							room.publishPresence(user.value);
+						}
+					});
+				}
 			}
 			loading = false;
 		});
-
-		// let moreInfo = await ipinfo.lookupIp(); //.then((response) => {
-		// user.value.name.concat(moreInfo?.countryFlag);
-		// console.log(moreInfo.countryFlag);
 		return () => {
 			unsubPresence();
 			room.leaveRoom();
@@ -147,15 +135,15 @@
 			</nav>
 		{/if}
 		{#if !loading}
-			{#if !closeLogin}
-				<Login {db} {closeLogin} />
-			{:else if closeLogin}
+			{#if !loginSuccess}
+				<Login />
+			{:else if loginSuccess}
 				<div class="grid grid-cols-1 md:grid-cols-2 w-full gap-8">
 					<div class="flex md:border-r-slate-300 md:border-r p-2 w-full">
-						<RoomChat {db} {room} {peers} />
+						<RoomChat {room} {peers} />
 					</div>
 					<div class="flex justify-start p-2 w-full">
-						<Tasks {db} />
+						<Tasks />
 					</div>
 				</div>
 			{/if}

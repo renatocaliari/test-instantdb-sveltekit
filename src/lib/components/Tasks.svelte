@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { init, tx, id } from '@instantdb/core';
+	import { db } from '$lib/db.svelte';
+	import { tx, id } from '@instantdb/core';
 	import { Button } from '$lib/components/shadcn/ui/button';
 	import Input from '$lib/components/shadcn/ui/input/input.svelte';
 	import Checkbox from '$lib/components/shadcn/ui/checkbox/checkbox.svelte';
-
-	const { db } = $props();
+	import { type Todo } from '$lib/schema';
+	import { toast } from 'svelte-sonner';
+	import { user } from '$lib/store.svelte.js';
 
 	let todos: Todo[] = $state([]);
 	let newTodo = $state('');
@@ -28,7 +30,8 @@
 			tx.todos[id()].update({
 				text,
 				done: false,
-				createdAt: Date.now()
+				createdAt: Date.now(),
+				createdBy: user.value.id
 			})
 		);
 	}
@@ -38,8 +41,11 @@
 	}
 
 	function toggleDone(todo: Todo) {
-		console.log('clicou');
-		db.transact(tx.todos[todo.id].update({ done: !todo.done }));
+		db.transact(tx.todos[todo.id].update({ done: !todo.done })).catch((err) => {
+			if (err.status === 'error') {
+				toast('Permission Error: You only can Update and Delete your own tasks');
+			}
+		});
 	}
 
 	function deleteCompleted(todos: Todo[]) {
