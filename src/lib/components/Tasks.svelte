@@ -33,7 +33,7 @@
 				createdAt: Date.now(),
 				createdBy: user.value.id
 			})
-		);
+		).catch((err) => console.log('error:', err));
 	}
 
 	function deleteTodoItem(todo: Todo) {
@@ -43,7 +43,7 @@
 	function toggleDone(todo: Todo) {
 		db.transact(tx.todos[todo.id].update({ done: !todo.done })).catch((err) => {
 			if (err.status === 'error') {
-				toast('Permission Error: You only can Update and Delete your own tasks');
+				toast('Permission Error: You can only Update and Delete your own tasks');
 			}
 		});
 	}

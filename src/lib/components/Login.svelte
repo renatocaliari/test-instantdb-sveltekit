@@ -42,7 +42,6 @@
 			loading = true;
 			const magiccode = await db.auth.sendMagicCode({ email: email });
 			loading = false;
-			// console.log('magiccode:', magiccode);
 			msgEmail = 'Check your email and copy/paste the magic code to proceed';
 			emailOK = true;
 		} catch (error) {
@@ -54,6 +53,7 @@
 	async function login() {
 		loading = true;
 		user.value = await db.auth.signInWithMagicCode({ email: email, code: token });
+
 		loading = false;
 		loginSuccess = true;
 	}

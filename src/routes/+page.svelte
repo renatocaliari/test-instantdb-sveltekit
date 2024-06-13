@@ -5,6 +5,7 @@
 	import Tasks from '$lib/components/Tasks.svelte';
 	import RoomChat from '$lib/components/RoomChat.svelte';
 	import { db } from '$lib/db.svelte';
+	import { tx, id } from '@instantdb/core';
 
 	// import { uuidv7 } from "uuidv7";
 
@@ -30,11 +31,25 @@
 			loginSuccess = !!auth.user;
 			user.value = undefined;
 			if (auth.user) {
-				if (auth.user) {
-					user.value = auth.user;
-					const randomId = Math.random().toString(36).slice(2, 6);
-					user.value.name = user.value.email.substring(0, 5) + randomId;
-				}
+				db.subscribeQuery({ users: { $: { where: { email: auth.user.email } } } }, (resp) => {
+					if (resp.data) {
+						const userExists = !!resp.data.users[0];
+						if (!userExists) {
+							db.transact(
+								tx.users[auth.user.id].update({
+									email: auth.user.email,
+									handle: '',
+									createdAt: Date.now()
+								})
+							);
+						}
+					}
+				});
+
+				user.value = auth.user;
+				const randomId = Math.random().toString(36).slice(2, 6);
+				user.value.name = user.value.email.substring(0, 5) + randomId;
+
 				room = db.joinRoom('general', 'main');
 				unsubPresence = room.subscribePresence({}, (data) => {
 					peers = room.getPresence()?.peers;

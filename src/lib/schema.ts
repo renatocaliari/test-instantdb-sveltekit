@@ -1,3 +1,10 @@
+export interface User {
+	id: string;
+	email: string;
+	handle: boolean;
+	createdAt: number;
+}
+
 export interface Todo {
 	id: string;
 	text: string;
@@ -7,9 +14,7 @@ export interface Todo {
 }
 
 export type RoomSchema = {
-	'topics-example': {
-		topics: object;
-	};
+	topics: object;
 };
 
 export type Schema = {
