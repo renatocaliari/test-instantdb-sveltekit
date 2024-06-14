@@ -25,7 +25,9 @@
 	let unsubPresence = $state();
 
 	onMount(() => {
-		// const ipinfo = new IPinfoWrapper('9b717c09549446');
+		window.addEventListener('beforeunload', () => {
+			unsubPresence && unsubPresence();
+		});
 
 		db.subscribeAuth((auth) => {
 			loginSuccess = !!auth.user;
@@ -49,12 +51,14 @@
 				const randomId = Math.random().toString(36).slice(2, 6);
 				user.value.name = user.value.email.substring(0, 5) + randomId;
 
-				room = db.joinRoom('general', 'main');
+				room = db.joinRoom('topics', 'main');
+				room.publishPresence(user.value);
 				peers = room.getPresence()?.peers;
 
-				unsubPresence = room.subscribePresence({}, (data) => {
+				unsubPresence = room.subscribePresence({ roomType: 'topics', roomId: 'main' }, (data) => {
 					peers = room.getPresence()?.peers;
-					console.log('peers:', peers);
+					// console.log('peers:', peers);
+					// console.log('data:', data);
 					removeCursorsFromPeersLeftRoom(peers, cursors);
 				});
 				const mousePosition = room.subscribeTopic('mousePosition', (data) => {
