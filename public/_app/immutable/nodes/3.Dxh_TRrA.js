@@ -1,0 +1,1 @@
+import{a as t,t as o}from"../chunks/disclose-version.DTTpPWK9.js";var p=o('<main class="p-2"><h1 class="text-lg font-semibold">About page</h1> This is an example page</main>');function s(a){var e=p();t(a,e)}export{s as component};

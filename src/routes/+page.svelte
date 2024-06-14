@@ -51,6 +51,8 @@
 				user.value.name = user.value.email.substring(0, 5) + randomId;
 
 				room = db.joinRoom('general', 'main');
+				peers = room.getPresence()?.peers;
+
 				unsubPresence = room.subscribePresence({}, (data) => {
 					peers = room.getPresence()?.peers;
 					console.log('peers:', peers);
