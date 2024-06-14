@@ -29,7 +29,6 @@
 
 		db.subscribeAuth((auth) => {
 			loginSuccess = !!auth.user;
-			user.value = undefined;
 			if (auth.user) {
 				db.subscribeQuery({ users: { $: { where: { email: auth.user.email } } } }, (resp) => {
 					if (resp.data) {
@@ -46,7 +45,7 @@
 					}
 				});
 
-				user.value = auth.user;
+				user.value = auth.user || undefined;
 				const randomId = Math.random().toString(36).slice(2, 6);
 				user.value.name = user.value.email.substring(0, 5) + randomId;
 
@@ -62,19 +61,19 @@
 					setCursorPosition(data.user.id, data.user.name, data.x, data.y);
 				});
 
-				if (!peers || Object.keys(peers).length === 0) {
-					room.publishPresence(user.value);
-				} else {
-					Object.keys(peers).forEach((peerId) => {
-						console.log('peerId:', peerId);
-						let foundPeer = Object.keys(peers).find((key) => {
-							return peers[key].id === peerId;
-						});
-						if (!foundPeer && peers[peerId].email) {
-							room.publishPresence(user.value);
-						}
-					});
-				}
+				// if (!peers || Object.keys(peers).length === 0) {
+				// 	room.publishPresence(user.value);
+				// } else {
+				// 	Object.keys(peers).forEach((peerId) => {
+				// 		// console.log('peerId:', peerId);
+				// 		let foundPeer = Object.keys(peers).find((key) => {
+				// 			return peers[key].id === peerId;
+				// 		});
+				// 		if (!foundPeer && peers[peerId].email) {
+				// 			room.publishPresence(user.value);
+				// 		}
+				// 	});
+				// }
 			}
 			loading = false;
 		});
